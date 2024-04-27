@@ -29,9 +29,10 @@ int main()
     // 子进程接收hello消息, 并回复
     if (0 == pid)
     {
-        NetTool nt("0.0.0.0", 8895);
+        NetTool nt("0.0.0.0", 8895, {});
         Message recv_hello_msg;
-        nt.recv(recv_hello_msg);
+        auto recv_result = nt.recv(recv_hello_msg);
+        cout << "recv_result " << recv_result << endl;
         cout << "hello::type " << recv_hello_msg.msg_type << endl;
         cout << "hello::info " << recv_hello_msg.info << endl;
 
@@ -45,14 +46,16 @@ int main()
     else
     {
         sleep(1);
-        NetTool nt("0.0.0.0", 8894, 8895);
+        NetTool nt("0.0.0.0", 8894, {8895, 8894});
         Message hello_msg;
         hello_msg.msg_type = MSG_TYPE::hello;
         hello_msg.info = "lhood";
         nt.broadcast(hello_msg);
-
         Message recv_msg;
-        nt.recv(recv_msg);
+        while (-2 == nt.recv(recv_msg))
+        {
+            cout << "Recvived local broadcast msg" << endl;
+        }
         cout << "recv_msg::type " << recv_msg.msg_type << endl;
         cout << "recv_msg::info " << recv_msg.info << endl;
     }

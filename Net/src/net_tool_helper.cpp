@@ -3,9 +3,22 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <ifaddrs.h>
 
 NetToolHelper::NetToolHelper() : m_socket(-1)
-{}
+{
+    get_all_local_ip();
+}
+
+NetToolHelper::~NetToolHelper()
+{
+    if (-1 != m_socket)
+    {
+        close(m_socket);
+    }
+}
 
 bool NetToolHelper::network_init(const char* ip, int port)
 {
@@ -52,6 +65,7 @@ bool NetToolHelper::network_init(const char* ip, int port)
     }
 
     LOG_INFOR("End network_init() socket fd:%d\n", m_socket);
+    m_binded_port = local_addr.sin_port;
     return true;
 }
 
@@ -106,7 +120,47 @@ ssize_t NetToolHelper::recv_msg(char* buffer, size_t size, struct sockaddr_in* a
     return recv_ret;
 }
 
+bool NetToolHelper::is_self(struct sockaddr_in& addr)
+{
+    return addr.sin_port == m_binded_port && 0 != m_local_ip_set.count(addr.sin_addr.s_addr);
+}
+
 bool NetToolHelper::is_valid()
 {
     return m_socket != -1;
+}
+
+void NetToolHelper::get_all_local_ip()
+{
+    struct ifaddrs *ifaddr, *ifa;
+    char host[NI_MAXHOST];
+    if (-1 == getifaddrs(&ifaddr))
+    {
+        LOG_ERROR("getifaddrs() failed\n");
+        return;
+    }
+
+    for (ifa = ifaddr; NULL != ifa; ifa = ifa->ifa_next)
+    {
+        if (NULL == ifa->ifa_addr)
+        {
+            continue;
+        }
+
+        if (AF_INET == ifa->ifa_addr->sa_family)
+        {
+            if (0 != getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in), host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST))
+            {
+                LOG_ERROR("getnameinfo() failed\n");
+                continue;
+            }
+            LOG_INFOR("Local ip:%s\n", host);
+            uint32_t temp = 0;
+            if (0 < inet_pton(AF_INET, host, &temp))
+            {
+                m_local_ip_set.emplace(temp);
+            }
+        }
+    }
+    freeifaddrs(ifaddr);
 }
