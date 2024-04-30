@@ -2,18 +2,6 @@
 #include <sqlite3.h>
 #include <unordered_map>
 
-class SQLMutexGuard
-{
-public:
-    SQLMutexGuard();
-    ~SQLMutexGuard();
-    bool got_mutex();
-
-private:
-    bool m_got_mutex;
-    static sqlite3_mutex* sql_mutex;
-};
-
 class UidManager
 {
 public:

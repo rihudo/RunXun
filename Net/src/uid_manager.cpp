@@ -11,26 +11,6 @@
 #define UID_TABLE_NAME "uid_table"
 #define MAX_UID_KEY "000000000000000" // 15个0
 
-sqlite3_mutex* SQLMutexGuard::sql_mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_RECURSIVE);
-
-SQLMutexGuard::SQLMutexGuard()
-{
-    m_got_mutex = SQLITE_OK == sqlite3_mutex_try(sql_mutex);
-}
-
-SQLMutexGuard::~SQLMutexGuard()
-{
-    if (m_got_mutex)
-    {
-        sqlite3_mutex_leave(sql_mutex);
-    }
-}
-
-bool SQLMutexGuard::got_mutex()
-{
-    return m_got_mutex;
-}
-
 UidManager::UidManager() : db(nullptr)
 {
     init();
@@ -61,7 +41,6 @@ uint32_t UidManager::get_uid(uint32_t ip, uint16_t port)
         return cached_uid.at(ip_info);
     }
 
-    SQLMutexGuard sql_mutex_guard;
     sqlite3_stmt *stmt;
     // 查询数据库是否已经分配了UID
     const char* query_existed_uid_sql = "SELECT uid from " UID_TABLE_NAME " WHERE ip_info = ?;";
@@ -170,7 +149,7 @@ void UidManager::init()
         db = nullptr;
         return;
     }
-    SQLMutexGuard sql_mutex_guard;
+
     // 检查table是否已经存在
     const char* check_table_sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" UID_TABLE_NAME "';";
     sqlite3_stmt* stmt;
