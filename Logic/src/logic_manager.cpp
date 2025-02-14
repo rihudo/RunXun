@@ -41,6 +41,21 @@ public:
         return m_user_manager.get_name(uid);
     }
 
+    const std::unordered_map<uint32_t, std::string>* get_existed_name_map_impl() const
+    {
+        return m_user_manager.get_existed_name_map();
+    }
+
+    const std::unordered_map<uint32_t, std::string>* get_new_name_map_impl() const
+    {
+        return m_user_manager.get_new_name_map();
+    }
+
+    const std::unordered_set<uint32_t>* get_online_user_impl() const
+    {
+        return m_user_manager.get_online_user();
+    }
+
 private:
     void say_hello(const std::string& self_name)
     {
@@ -75,6 +90,21 @@ bool LogicManager::start()
 std::string LogicManager::get_user_name(uint32_t uid)
 {
     return impl ? impl->get_user_name_impl(uid) : "";
+}
+
+const std::unordered_map<uint32_t, std::string>* LogicManager::get_existed_name_map() const
+{
+    return impl ? impl->get_existed_name_map_impl() : nullptr;
+}
+
+const std::unordered_map<uint32_t, std::string>* LogicManager::get_new_name_map() const
+{
+    return impl ? impl->get_new_name_map_impl() : nullptr;
+}
+
+const std::unordered_set<uint32_t>* LogicManager::get_online_user() const
+{
+    return impl ? impl->get_online_user_impl() : nullptr;
 }
 
 const std::vector<ChatRecordEntry>* LogicManager::get_records(uint32_t uid)

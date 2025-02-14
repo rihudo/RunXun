@@ -36,13 +36,16 @@
     <property name="geometry">
      <rect>
       <x>150</x>
-      <y>0</y>
+      <y>30</y>
       <width>150</width>
-      <height>700</height>
+      <height>670</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">border: 1px solid</string>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
     </property>
    </widget>
    <widget class="QListView" name="chat_record">
@@ -61,6 +64,9 @@
     </property>
     <property name="editTriggers">
      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+    </property>
+    <property name="showDropIndicator" stdset="0">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QTextEdit" name="input_box">
@@ -238,6 +244,9 @@
      <font>
       <pointsize>15</pointsize>
      </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
     </property>
     <property name="text">
      <string>START</string>

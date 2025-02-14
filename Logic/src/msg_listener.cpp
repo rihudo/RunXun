@@ -124,6 +124,7 @@ void MsgListener::listen_func()
     {
         Message msg;
         auto ret = m_net_tool.recv(msg);
+        LOG_INFOR("Recv ret:%ld\n",ret);
         if (RECV_SELF == ret)
         {
             LOG_INFOR("Skip self broadcast\n");

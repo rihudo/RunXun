@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <record_entry.hpp>
+#include <unordered_set>
 
 /* 业务逻辑模块的句柄类
  * 与其他模块的交互均在此发生
@@ -22,6 +23,12 @@ public:
     const std::vector<ChatRecordEntry>* get_records(uint32_t uid);
 
     std::string get_user_name(uint32_t uid);
+
+    const std::unordered_map<uint32_t, std::string>* get_existed_name_map() const;
+
+    const std::unordered_map<uint32_t, std::string>* get_new_name_map() const;
+
+    const std::unordered_set<uint32_t>* get_online_user() const;
 
     // 设置收到hello消息时的处理回调
     bool set_hello_callback(MSG_CALLBACK hello_cb);

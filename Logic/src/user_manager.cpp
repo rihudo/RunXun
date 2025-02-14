@@ -51,6 +51,21 @@ void UserManager::unset_user(uint32_t uid)
     }
 }
 
+const std::unordered_map<uint32_t, std::string>* UserManager::get_existed_name_map() const
+{
+    return &existed_name_map;
+}
+
+const std::unordered_map<uint32_t, std::string>* UserManager::get_new_name_map() const
+{
+    return &new_name_map;
+}
+
+const std::unordered_set<uint32_t>* UserManager::get_online_user() const
+{
+    return &online_user;
+}
+
 void UserManager::init_name()
 {
     LOG_INFOR("Start init_name()\n");

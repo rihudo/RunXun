@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     init_focus();
     init_chat_record();
+    init_user_info();
 }
 
 MainWindow::~MainWindow()
@@ -24,15 +25,25 @@ void MainWindow::init_focus()
 
 void MainWindow::init_chat_record()
 {
-    model = new QStandardItemModel();
-    ui->chat_record->setModel(model);
+    record_model = new QStandardItemModel();
+    ui->chat_record->setModel(record_model);
     // TO_DO TEST
 #if 1
-    model->appendRow(new QStandardItem("TEST 1"));
-    model->appendRow(new QStandardItem("TEST 2"));
-    model->appendRow(new QStandardItem("TEST 3"));
-    ui->chat_record->show();
+    auto* test_item = new QStandardItem("TEST 1");
+    test_item->setBackground(QBrush(Qt::GlobalColor::gray));
+    record_model->appendRow(test_item);
+    record_model->appendRow(new QStandardItem("TEST 2"));
+    record_model->appendRow(new QStandardItem("TEST 3"));
+    //ui->chat_record->show();
+    QObject::connect(ui->chat_record, SIGNAL(indexesMoved(QModelIndexList)), this, SLOT(on_indexesMoved(QModelIndexList)));
 #endif
+}
+
+void MainWindow::init_user_info()
+{
+    user_model = new QStandardItemModel();
+    ui->user_info->setModel(user_model);
+    QObject::connect(ui->user_info, SIGNAL(indexesMoved(QModelIndexList)), this, SLOT(on_indexesMoved(QModelIndexList)));
 }
 
 bool MainWindow::check_configuration(const QString& port, const QString& name, const QList<QString>& send_port_list)
@@ -61,6 +72,24 @@ bool MainWindow::check_configuration(const QString& port, const QString& name, c
     return true;
 }
 
+void MainWindow::handle_newly_appeared_user(uint32_t uid, const std::string& msg)
+{
+    // A new user appeared
+    if (0 == user_item_list.count(uid))
+    {
+        // add new item of user information to USER_INFOR window
+        auto* new_user_item = new QStandardItem(QString(msg.c_str()));
+        new_user_item->setBackground(QBrush(Qt::GlobalColor::green));
+        user_model->appendRow(new_user_item);
+        user_item_list.emplace(std::make_pair(uid, new_user_item));
+    }
+    // An existed user is oneline now
+    else if (!user_item_list.at(uid)->isEnabled())
+    {
+        user_item_list.at(uid)->setBackground(QBrush(Qt::GlobalColor::green));
+    }
+}
+
 void MainWindow::on_start_clicked()
 {
     QString local_port = ui->local_port->text();
@@ -82,6 +111,21 @@ void MainWindow::on_start_clicked()
         }
     }
     logic_manager = new LogicManager(name.toStdString(), local_port.toInt(), port_list);
+    // Set callbacks
+    logic_manager->set_hello_callback([this](uint32_t uid, const std::string& msg){
+        this->handle_newly_appeared_user(uid, msg);});
+    logic_manager->set_hello_reply_callback([this](uint32_t uid, const std::string& msg){
+        this->handle_newly_appeared_user(uid, msg);});
+
     logic_manager->start();
+}
+
+void MainWindow::on_indexesMoved(const QModelIndexList & index_list)
+{
+    for (const auto& idx : index_list)
+    {
+        // TO_DO
+        qDebug() << "lhood" << idx.column() << idx.row();
+    }
 }
 

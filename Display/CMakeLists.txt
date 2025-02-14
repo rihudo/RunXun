@@ -23,6 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Display
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        readme.txt
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Display APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -42,7 +43,7 @@ else()
     endif()
 endif()
 
-target_link_directories(Display PRIVATE ../Logic/build)
+target_link_directories(Display PRIVATE ../Logic/build ../Net/build)
 target_link_libraries(Display PRIVATE Qt${QT_VERSION_MAJOR}::Widgets logic)
 target_include_directories(Display PRIVATE ../Logic/include)
 

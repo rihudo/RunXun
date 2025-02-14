@@ -23,6 +23,12 @@ public:
     
     void unset_user(uint32_t uid);
 
+    const std::unordered_map<uint32_t, std::string>* get_existed_name_map() const;
+
+    const std::unordered_map<uint32_t, std::string>* get_new_name_map() const;
+
+    const std::unordered_set<uint32_t>* get_online_user() const;
+
 private:
     void init_name();
 
