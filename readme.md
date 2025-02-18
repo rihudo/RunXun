@@ -13,5 +13,13 @@
 - 提供设置回调函数接口，用以将各种报文事件抛出
 
 ## 3. 界面模块
-    // TO_DO
+使用方法:
+1. 启动 sudo ./Display 注意必须要有root权限, 用于创建/读/写文件
+2. 输入自己昵称后, 点击START按钮
+3. 在Information栏, 有其他用户的列表. 背景灰色表示离线, 绿色则表示在线。 如图:
+![online](picture/online.png)
+4. 点击想要进行聊天的用户, 则可在右边看到聊天记录, 随后可以在底部的输入框发送消息, 支持回车发送. 如图:
+![chat_record](picture/chat_record.png)
+5. 当正在聊天的以外的用户发来消息时候, information栏中的对应项背景会变成红色. 如图:
+![new_msg](picture/new_msg.png)
    
