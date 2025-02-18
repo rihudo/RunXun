@@ -24,6 +24,10 @@ public:
 
     std::string get_user_name(uint32_t uid);
 
+    void load_user(int32_t uid);
+
+    ssize_t send_msg(uint32_t uid, const char* msg);
+
     const std::unordered_map<uint32_t, std::string>* get_existed_name_map() const;
 
     const std::unordered_map<uint32_t, std::string>* get_new_name_map() const;

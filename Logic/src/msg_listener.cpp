@@ -90,6 +90,7 @@ void MsgListener::handle_msg(const Message& msg)
         LOG_ERROR("handle_msg uid is 0\n");
         return;
     }
+    LOG_INFOR("Got msg: %s from uid:%u\n", msg.info.c_str(), uid);
     // 添加聊天记录
     m_record_manager.append_record(uid, false, msg.info);
     // 发送回复

@@ -16,6 +16,11 @@ public:
         assert(m_net_tool.is_ready());
     }
 
+    ~Impl()
+    {
+        say_bye();
+    }
+
     bool start_impl()
     {
         if (m_listener.start_listen())
@@ -24,6 +29,16 @@ public:
             return true;
         }
         return false;
+    }
+
+    ssize_t send_msg_impl(uint32_t uid, const char* msg)
+    {
+        ssize_t ret = m_net_tool.send(uid, msg);
+        if (0 < ret)
+        {
+            m_record_manager.append_record(uid, true, msg);
+        }
+        return ret;
     }
 
     void set_callback(MSG_TYPE type, MSG_CALLBACK cb)
@@ -39,6 +54,11 @@ public:
     std::string get_user_name_impl(uint32_t uid)
     {
         return m_user_manager.get_name(uid);
+    }
+
+    void load_user_impl(int32_t uid)
+    {
+        return m_record_manager.load_user(uid);
     }
 
     const std::unordered_map<uint32_t, std::string>* get_existed_name_map_impl() const
@@ -63,6 +83,13 @@ private:
         hello_msg.msg_type = MSG_TYPE::hello;
         hello_msg.info = self_name;
         m_net_tool.broadcast(hello_msg);
+    }
+
+    void say_bye()
+    {
+        Message bye_msg;
+        bye_msg.msg_type = MSG_TYPE::bye;
+        m_net_tool.broadcast(bye_msg);
     }
 
 private:
@@ -90,6 +117,19 @@ bool LogicManager::start()
 std::string LogicManager::get_user_name(uint32_t uid)
 {
     return impl ? impl->get_user_name_impl(uid) : "";
+}
+
+void LogicManager::load_user(int32_t uid)
+{
+    if (impl)
+    {
+        impl->load_user_impl(uid);
+    }
+}
+
+ssize_t LogicManager::send_msg(uint32_t uid, const char* msg)
+{
+    return impl ? impl->send_msg_impl(uid, msg) : -1;
 }
 
 const std::unordered_map<uint32_t, std::string>* LogicManager::get_existed_name_map() const

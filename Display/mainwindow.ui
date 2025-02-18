@@ -10,6 +10,9 @@
     <height>700</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::FocusPolicy::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>RunXun</string>
   </property>
@@ -29,44 +32,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Nobody</string>
-    </property>
-   </widget>
-   <widget class="QListView" name="user_info">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>30</y>
-      <width>150</width>
-      <height>670</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border: 1px solid</string>
-    </property>
-    <property name="editTriggers">
-     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
-    </property>
-   </widget>
-   <widget class="QListView" name="chat_record">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>52</y>
-      <width>700</width>
-      <height>588</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>13</pointsize>
-     </font>
-    </property>
-    <property name="editTriggers">
-     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
-    </property>
-    <property name="showDropIndicator" stdset="0">
-     <bool>false</bool>
+     <string/>
     </property>
    </widget>
    <widget class="QTextEdit" name="input_box">
@@ -74,7 +40,7 @@
      <rect>
       <x>300</x>
       <y>640</y>
-      <width>700</width>
+      <width>600</width>
       <height>60</height>
      </rect>
     </property>
@@ -179,6 +145,9 @@
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -187,12 +156,20 @@
       <height>51</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
     <property name="text">
      <string>Send port:
-(Can be empty)</string>
+(Unavailable now)</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="send_port_one">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -206,6 +183,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="send_port_two">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -219,6 +199,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="send_port_three">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -232,6 +215,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="start">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -250,6 +236,51 @@
     </property>
     <property name="text">
      <string>START</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="user_info">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>30</y>
+      <width>150</width>
+      <height>670</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::FocusPolicy::NoFocus</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="chat_record">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>52</y>
+      <width>700</width>
+      <height>588</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::FocusPolicy::NoFocus</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="send_msg">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>640</y>
+      <width>100</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SEND</string>
     </property>
    </widget>
   </widget>

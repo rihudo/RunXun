@@ -23,6 +23,7 @@ public:
     void broadcast(const Message& msg);
     // Return -1 when failed
     ssize_t send(const Message& msg);
+    ssize_t send(uint32_t uid, const char* msg);
     /* Return 0 when no messages are available to be received.
      * Return -1 when failed.
      * Return -2 when receiving broadcast data sent by itself.

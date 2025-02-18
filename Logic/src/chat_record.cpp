@@ -5,7 +5,7 @@
 #define IS_SELF_TRUE 1
 #define IS_SELF_FALSE 0
 
-ChatRecord::ChatRecord(uint32_t uid, sqlite3* _db) : m_uid(uid), db(_db)
+ChatRecord::ChatRecord(uint32_t uid, sqlite3* _db) : m_uid(uid), existed_idx(0), db(_db)
 {
     if (is_valid())
     {

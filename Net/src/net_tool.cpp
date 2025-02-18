@@ -61,6 +61,20 @@ public:
         return m_helper.send_msg(send_msg.c_str(), send_msg.size(), &m_addr_map.at(msg.addr_id));
     }
 
+    ssize_t send_impl(uint32_t uid, const char* msg)
+    {
+        if (0 == m_uid_map.count(uid))
+        {
+            LOG_ERROR("Can't get peer addr from uid:%u\n", uid);
+            return -1;
+        }
+        Message info;
+        info.info = msg;
+        info.addr_id = m_uid_map.at(uid);
+        info.msg_type = MSG_TYPE::msg;
+        return send_impl(info);
+    }
+
     ssize_t recv_impl(Message& msg)
     {
         memset(&m_remote_addr, 0, sizeof(m_remote_addr));
@@ -79,7 +93,9 @@ public:
             {
                 return -3;
             }
+            
             AddrID new_addr(m_remote_addr.sin_addr.s_addr, m_remote_addr.sin_port, uid);
+            m_uid_map.emplace(std::make_pair(uid, new_addr));
             if (0 == m_addr_map.count(new_addr))
             {
                 m_addr_map.emplace(std::make_pair(new_addr, m_remote_addr));
@@ -119,6 +135,8 @@ private:
     NetToolHelper m_helper;
     ProtocolHandler m_protocol_handler;
     std::unordered_map<AddrID, struct sockaddr_in, AddrIDHash> m_addr_map;
+    // <uid, addr>
+    std::unordered_map<uint32_t, AddrID> m_uid_map;
     struct sockaddr_in m_remote_addr;
     std::list<int> m_broadcast_port_list;
     std::list<struct sockaddr_in> m_broadcast_addr_list;
@@ -141,6 +159,11 @@ void NetTool::broadcast(const Message& msg)
 ssize_t NetTool::send(const Message& msg)
 {
     return impl ? impl->send_impl(msg) : -1;
+}
+
+ssize_t NetTool::send(uint32_t uid, const char* msg)
+{
+    return impl ? impl->send_impl(uid, msg) : -1;
 }
 
 ssize_t NetTool::recv(Message& msg)
